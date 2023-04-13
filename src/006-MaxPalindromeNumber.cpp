@@ -17,29 +17,28 @@ public:
                     return to_string(i);
                 }
             }
-        } else {
-            string left = "";
-            string right = "";
-            int i = 9;
-            while (i >= 0) {
-                if (arr[i] > 1) { // 拿来拼
-                    left.push_back('0' + i);
-                    arr[i] -= 2;
-                } else {
-                    i--;
-                }
-            }
-            right = left;
-            reverse(right.begin(), right.end());
-            // 把出现次数恰好为1次的最大数字放在中间
-            for (i = 9; i >= 0; i--) {
-                if (arr[i] == 1) {
-                    left.push_back('0' + i);
-                    break;
-                }
-            }
-            return left + right;
         }
+        string left = "";
+        string right = "";
+        int i = 9;
+        while (i >= 0) {
+            if (arr[i] > 1) { // 拿来拼
+                left.push_back('0' + i);
+                arr[i] -= 2;
+            } else {
+                i--;
+            }
+        }
+        right = left;
+        reverse(right.begin(), right.end());
+        // 把出现次数恰好为1次的最大数字放在中间
+        for (i = 9; i >= 0; i--) {
+            if (arr[i] == 1) {
+                left.push_back('0' + i);
+                break;
+            }
+        }
+        return left + right;
     }
     bool onlyZeroMore(vector<int>& arr) {
         if (arr[0] < 2) {

@@ -76,5 +76,37 @@ public:
         return dp[0][len];
     }
     
-    
+    // 题目三
+    class Cmp {
+    public:
+        bool operator()(vector<int>& a, vector<int>& b) {
+            return a[0] < b[0];
+        }
+    };
+    int maxLen(vector<vector<int>>& arr) {
+        sort(arr.begin(), arr.end(), Cmp()); // 根据开头排序
+    }
+    int process3(vector<vector<int>>& arr, int i, int preIndex) {
+        if (i == arr.size()) {
+            return 0;
+        }
+        int p1 = process3(arr, i + 1, preIndex);
+        int p2 = 0;
+        if (preIndex == -1 || arr[preIndex][1] == arr[i][0]) {
+            p2 = 1 + process3(arr, i + 1, i);
+        }
+        return max(p1, p2);
+    }
+    int dp3(vector<vector<int>>& arr) { // arr已经排好序
+        int n = arr.size();
+        vector<int> dp(n, 1);
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (arr[j][1] == arr[i][0]) {
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        return *max_element(dp.begin(), dp.end());
+    }
 };

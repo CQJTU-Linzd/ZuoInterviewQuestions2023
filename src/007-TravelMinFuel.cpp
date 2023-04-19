@@ -15,7 +15,7 @@ public:
         // 办公室是0号点 所有员工往0号点汇聚
         
         // dfn序 
-        // dfn[a] != 0 说明a号点没遍历过
+        // dfn[a] == 0 说明a号点没遍历过
         vector<int>dfn(n + 1);
 
         // a为头的树，一共有10个节点
@@ -34,7 +34,7 @@ public:
         dfn[cur] = ++cnt;
         size[cur] = 1;
         for (int next : graph[cur]) {
-            if (dfn[next]) { // 只有dfn序是0，才往下走
+            if (dfn[next] == 0) { // 只有dfn序是0，才往下走
                 dfs(graph, next, dfn, size, cost);
                 size[cur] += size[next];
                 cost[cur] += cost[next]; // next所有孩子，汇聚到next花了多少

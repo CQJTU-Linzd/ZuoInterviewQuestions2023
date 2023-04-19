@@ -1,72 +1,93 @@
 // P8
 // https://www.bilibili.com/video/BV1DT411s7hp?p=8&vd_source=2286e10835cc4cd375b26d18d9e6fa7e
-class MinCostMostE {
+class TravelMinFuel {
+    int cnt;
 public:
+    // n个居民点，n + 1个节点
+    int minFuel1(vector<int>& a, vector<int>& b, int n) {
+        // 先建图 邻接表
+        vector<vector<int>>graph(n + 1);
+        for (int i = 0; i < a.size(); i++) {
+            graph[a[i]].push_back(b[i]);
+            graph[b[i]].push_back(a[i]);
+        }
+        // 建图完毕
+        // 办公室是0号点 所有员工往0号点汇聚
+
+        // dfn序 
+        // dfn[a] == 0 说明a号点没遍历过
+        vector<int>dfn(n + 1);
+
+        // a为头的树，一共有10个节点
+        // 没遍历的时候，size[a] = 0
+        // 遍历完a，size[a] = 10
+        vector<int>size(n + 1);
+
+        // cost[a]：所有居民汇聚到a，总油量是多少
+        vector<int>cost(n + 1);
+
+        cnt = 0;
+        dfs(graph, 0, dfn, size, cost);
+        return cost[0];
+    }
+    void dfs(vector<vector<int>>& graph, int cur, vector<int>& dfn, vector<int>& size, vector<int>& cost) {
+        dfn[cur] = ++cnt;
+        size[cur] = 1;
+        for (int next : graph[cur]) {
+            if (dfn[next] == 0) { // 只有dfn序是0，才往下走
+                dfs(graph, next, dfn, size, cost);
+                size[cur] += size[next];
+                cost[cur] += cost[next]; // next所有孩子，汇聚到next花了多少
+                cost[cur] += (size[next] + 5 - 1) / 5; // next及其所有孩子，一起汇聚到cur的花费
+            }
+        }
+    }
+
+
+    // 法二
 
     class Info {
     public:
-        int mostGoodE;
-        int minCost;
-        Info(int goodE, int cost) {
-            mostGoodE = goodE;
-            minCost = cost;
+        int size;
+        int cost;
+        Info(int s, int c) {
+            size = s;
+            cost = c;
         }
     };
 
-    // prepre: i-2位置的决定
-    // pre: i-1位置的决定
-    // 可以把i-1位置变成好e，也可以不变，去决策
-    Info process(string s, int i, char prepre, char pre) {
-        if (i == s.size()) {
-            return Info(0, 0);
+    int minFuel2(vector<int>& a, vector<int>& b, int n) {
+        // 先建图 邻接表
+        vector<vector<int>>graph(n + 1);
+        for (int i = 0; i < a.size(); i++) {
+            graph[a[i]].push_back(b[i]);
+            graph[b[i]].push_back(a[i]);
         }
+        // 建图完毕
+        // 办公室是0号点 所有员工往0号点汇聚
 
-        // p1：i位置变成'r'
-        int cur1Value = s[prepre] == 'd' && s[pre] == 'e' ? 1 : 0;
-        int cur1Cost = s[i] == 'r' ? 0 : 1;
-        Info info1 = process(s, i + 1, pre, 'r');
-        int p1Value = cur1Value + info1.mostGoodE;
-        int p1Cost = cur1Cost + info1.minCost;
+        // dfn序 
+        // dfn[a] == 0 说明a号点没遍历过
+        vector<int>dfn(n + 1);
+        cnt = 0;
+        return process(graph, dfn, 0).cost;
+    }
 
-        // p2：i位置变成'e'
-        int cur2Value = 0;
-        int cur2Cost = s[i] == 'e' ? 0 : 1;
-        Info info2 = process(s, i + 1, pre, 'e');
-        int p2Value = cur2Value + info2.mostGoodE;
-        int p2Cost = cur2Cost + info2.minCost;
-
-        // p3：i位置变成'd'
-        int cur3Value = s[prepre] == 'r' && s[pre] == 'e' ? 1 : 0;
-        int cur3Cost = s[i] == 'd' ? 0 : 1;
-        Info info3 = process(s, i + 1, pre, 'd');
-        int p3Value = cur3Value + info3.mostGoodE;
-        int p3Cost = cur3Cost + info3.minCost;
-
-        int mostE = 0;
-        int minCost = INT_MAX;
-
-        if (mostE < p1Value) {
-            mostE = p1Value;
-            minCost = p1Cost;
-        } else if (mostE == p1Value) {
-            minCost = min(minCost, p1Cost);
+    Info process(vector<vector<int>>& graph, vector<int>& dfn, int cur) {
+        dfn[cur] = ++cnt;
+        int size = 1;
+        int cost = 0;
+        for (int next : graph[cur]) {
+            if (dfn[next] == 0) {
+                Info nextInfo = process(graph, dfn, next);
+                int nextSize = nextInfo.size;
+                int nextCost = nextInfo.cost;
+                size += nextSize;
+                cost += nextCost;
+                cost += (nextSize + 5 - 1) / 5;
+            }
         }
-
-        if (mostE < p2Value) {
-            mostE = p2Value;
-            minCost = p2Cost;
-        } else if (mostE == p2Value) {
-            minCost = min(minCost, p2Cost);
-        }
-
-        if (mostE < p3Value) {
-            mostE = p3Value;
-            minCost = p3Cost;
-        } else if (mostE == p3Value) {
-            minCost = min(minCost, p3Cost);
-        }
-
-        return Info(mostE, minCost);
+        return Info(size, cost);
     }
 
 };

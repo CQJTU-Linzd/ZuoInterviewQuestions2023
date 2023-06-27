@@ -1,5 +1,6 @@
 // 162
 // https://www.bilibili.com/video/BV1DT411s7hp?p=162&vd_source=2286e10835cc4cd375b26d18d9e6fa7e
+// https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/
 class MinRange {
 public:
 

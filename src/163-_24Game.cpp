@@ -16,19 +16,16 @@ public:
 			return denominator;
 		}
 		Number* operator+(const Number& num) {
-			return simple(Number(this->numerator * num.denominator + this->denominator * num.numerator,
-						  this->denominator * num.denominator));
+			return simple(Number(this->numerator * num.denominator + this->denominator * num.numerator, this->denominator * num.denominator));
 		}
 		Number* operator-(const Number& num) {
-			return simple(Number(this->numerator * num.denominator - this->denominator * num.numerator,
-						  this->denominator * num.denominator));
+			return simple(Number(this->numerator * num.denominator - this->denominator * num.numerator, this->denominator * num.denominator));
 		}
 		Number* operator*(const Number& num) {
 			return simple(Number(this->numerator * num.numerator, this->denominator * num.denominator));
 		}
 		Number* operator/(const Number& num) {
-			return num.numerator == 0 ? NULL : simple(Number(this->numerator * num.denominator,
-													  this->denominator * num.numerator));
+			return num.numerator == 0 ? NULL : simple(Number(this->numerator * num.denominator, this->denominator * num.numerator));
 		}
 
 		Number* simple(const Number& num) {
